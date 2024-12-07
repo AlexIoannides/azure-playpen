@@ -1,8 +1,11 @@
+# Project
+.ruff_cache
+*.zip
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-.ruff_cache
 
 # C extensions
 *.so
