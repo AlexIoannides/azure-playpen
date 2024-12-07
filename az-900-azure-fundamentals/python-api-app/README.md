@@ -9,6 +9,8 @@ To be used for testing various deployment options. This defines an app with a si
 }
 ```
 
+**Note: that Azure App Service expects port 8000 to be used for serving.**
+
 ## Test the App
 
 Dependencies managed using [uv](https://docs.astral.sh/uv/) - start by setting-up the environment:

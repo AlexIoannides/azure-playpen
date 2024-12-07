@@ -33,7 +33,10 @@ This can also be set in the portal by browsing to `Settings --> Configuration` a
 Next, create a ZIP file for the app:
 
 ```text
-zip -r python-api.zip $(realpath ../python-api-app) -x '*/.*' '*/__pycache__*'
+cd ../python-api-app &&\
+    zip -r python-api.zip . -x '.??*' '__pycache__/*' &&\
+    mv python-api.zip ../app-service-python/python-api.zip &&\
+    cd ../app-service-python
 ```
 
 And deploy!
@@ -43,4 +46,43 @@ az webapp deploy \
     --resource-group az900-app-service-python \
     --name az900-app-service-python \
     --src-path python-api.zip
+```
+
+## Testing the Service
+
+```text
+$ curl -sL http://az900-app-service-python-ecc3hbczfpfhgvcp.uksouth-01.azurewebsites.net | jq
+{
+  "timestamp": "2024-12-07T16:50:25.737",
+  "message": "I am healthy."
+}
+```
+
+Where the `-L` flag follows redirects.
+
+## Accessing Logs
+
+Configure logging to the local filesystem:
+
+```text
+az webapp log config \
+    --resource-group az900-app-service-python \
+    --name az900-app-service-python \
+    --web-server-logging filesystem
+```
+
+Stream logs (albeit with a lag):
+
+```text
+az webapp log tail \
+    --resource-group az900-app-service-python \
+    --name az900-app-service-python
+```
+
+Note: the VS Code plugin for Azure provides direct access to a lot of these.
+
+## Clean Up
+
+```text
+az group delete --name az900-app-service-python
 ```
