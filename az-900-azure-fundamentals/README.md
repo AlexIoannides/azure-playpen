@@ -2,4 +2,6 @@
 
 This directory contains material that I used to learn Azure fundamentals while preparing for the AZ-900 certification.
 
-![azure-compute-decision-tree](images/decision-tree.png)
+## Compute Service Decision Tree
+
+![azure-compute-decision-tree](_images/decision-tree.png)

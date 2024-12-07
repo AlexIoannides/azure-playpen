@@ -6,6 +6,27 @@ Deploying the `python-api-app` using Azure App Service, following workflows from
 
 Create an empty App Service from within the Azure portal, choosing to export an ARM template and parameters file (see the `iac` directory).
 
+### Redeploying with ARM Templates
+
+First of all create a new resource group:
+
+```text
+az group create \
+  --name az900-app-service-python \
+  --location 'UK South'
+```
+
+Then we can deploy the template:
+
+```text
+az deployment group create \
+    --resource-group az900-app-service-python \
+    --template-file iac/app-template.json \
+    --parameters iac/app.parameters.json
+```
+
+**Note: you will need to modify the resource group name, subscription ID and region as they are parameters for the template.**
+
 ### Deploy the App as a ZIP File
 
 Enable build automation:

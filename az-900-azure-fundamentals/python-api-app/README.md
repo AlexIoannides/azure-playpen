@@ -1,6 +1,6 @@
 # A Simple Web API
 
-To be used for testing various deployment options. This defines an app with a single route at `"/"` that returns a heatbeat - e.g.,
+To be used for testing various deployment options. This defines an app with a single route at `"/"` that returns a heartbeat - e.g.,
 
 ```text
 {
