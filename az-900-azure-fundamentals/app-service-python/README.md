@@ -4,30 +4,9 @@ Deploying the `python-api-app` using Azure App Service, following workflows from
 
 ## Using the Azure Portal
 
-Create an empty App Service from within the Azure portal, choosing to export an ARM template and parameters file (see the `iac` directory).
+Create an empty App Service from within the Azure portal, choosing to export an ARM template and parameters file before creation (see the `iac` directory and [Redeploying with ARM Templates](#redeploying-with-arm-templates)).
 
-### Redeploying with ARM Templates
-
-First of all create a new resource group:
-
-```text
-az group create \
-  --name az900-app-service-python \
-  --location 'UK South'
-```
-
-Then we can deploy the template:
-
-```text
-az deployment group create \
-    --resource-group az900-app-service-python \
-    --template-file iac/app-template.json \
-    --parameters iac/app.parameters.json
-```
-
-**Note: you will need to modify the resource group name, subscription ID and region as they are parameters for the template.**
-
-### Deploy the App as a ZIP File
+### Deploy the App as a Zip File
 
 Enable build automation:
 
@@ -51,7 +30,7 @@ az webapp config set \
 
 This can also be set in the portal by browsing to `Settings --> Configuration` and setting `Startup Command` to `startup.sh`.
 
-Next, create a ZIP file for the app:
+Next, create a zip file for the app:
 
 ```text
 cd ../python-api-app &&\
@@ -69,13 +48,7 @@ az webapp deploy \
     --src-path python-api.zip
 ```
 
-## Configuring CI
-
-When first creating the App Service in the portal you are asked if you want to configure Continuous Integration (CI) and Continuous Deployment (CD). One of the options is to authenticate to GitHub and then allow Azure to inject a GitHub Actions workflow (and the appropriate secrets) to build the zip file in one job and deploy it in another. This can also be configured after initial setup in `Deployment --> Deployment Center`.
-
-In my opinion, this is a useful starting point but will likely need to be modified to fit the DevOps best practices in use within a particular team. Also, I'd prefer it if GitHub didn't add and remove files from my repo, but I'm not sure if it's realistic to try and circumnavigate this connection.
-
-## Testing the Service
+### Testing the Service
 
 ```text
 $ curl -sL http://az900-app-service-python-ecc3hbczfpfhgvcp.uksouth-01.azurewebsites.net | jq
@@ -87,7 +60,7 @@ $ curl -sL http://az900-app-service-python-ecc3hbczfpfhgvcp.uksouth-01.azurewebs
 
 Where the `-L` flag follows redirects.
 
-## Accessing Logs
+### Accessing Logs
 
 Configure logging to the local filesystem:
 
@@ -106,10 +79,63 @@ az webapp log tail \
     --name az900-app-service-python
 ```
 
-Note: the VS Code plugin for Azure provides direct access to a lot of these.
+**Note: the VS Code plugin for Azure provides direct access to a lot of these, as does the portal.**
 
-## Clean Up
+### Clean Up
 
 ```text
 az group delete --name az900-app-service-python
 ```
+
+## Redeploying with ARM Templates
+
+First of all create a new resource group:
+
+```text
+az group create \
+  --name az900-app-service-python \
+  --location 'UK South'
+```
+
+Then we can deploy the template:
+
+```text
+az deployment group create \
+    --resource-group az900-app-service-python \
+    --template-file iac/app-template.json \
+    --parameters iac/app.parameters.json
+```
+
+**Note: you will need to modify the resource group name, subscription ID and region as they are parameters for the template.**
+
+## Configuring CI
+
+When first creating the App Service in the portal you are asked if you want to configure Continuous Integration (CI) and Continuous Deployment (CD). One of the options is to authenticate to GitHub and then allow Azure to inject a GitHub Actions workflow (and the appropriate secrets) to build the zip file in one job and deploy it in another. This can also be configured after initial setup in `Deployment --> Deployment Center`.
+
+In my opinion, this is a useful starting point but will likely need to be modified to fit the DevOps best practices in use within a particular team. Also, I'd prefer it if GitHub didn't add and remove files from my repo - it's probably better to use the automatically generated workflow as a guide, but to recreate the zip file build-and-push manually, which would require getting the Azure CLI tool in a GitHub action and authenticating, etc. - e.g.,
+
+```yaml
+name: Azure CLI Example
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  azure-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Run Azure CLI command
+        run: |
+          az account show
+```
+
+Where `secrets.AZURE_CREDENTIALS` are those for a dedicated Azure service principle. See the [github.com/Azure/login](https://github.com/Azure/login) for more information and examples.
