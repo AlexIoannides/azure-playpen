@@ -1,4 +1,4 @@
-# Azure Playen
+# Azure Playpen
 
 This repo contains example code and notes for using Microsoft Azure.
 
