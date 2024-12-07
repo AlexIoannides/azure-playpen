@@ -69,6 +69,12 @@ az webapp deploy \
     --src-path python-api.zip
 ```
 
+## Configuring CI
+
+When first creating the App Service in the portal you are asked if you want to configure Continuous Integration (CI) and Continuous Deployment (CD). One of the options is to authenticate to GitHub and then allow Azure to inject a GitHub Actions workflow (and the appropriate secrets) to build the zip file in one job and deploy it in another. This can also be configured after initial setup in `Deployment --> Deployment Center`.
+
+In my opinion, this is a useful starting point but will likely need to be modified to fit the DevOps best practices in use within a particular team. Also, I'd prefer it if GitHub didn't add and remove files from my repo, but I'm not sure if it's realistic to try and circumnavigate this connection.
+
 ## Testing the Service
 
 ```text
