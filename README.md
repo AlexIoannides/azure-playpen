@@ -1,6 +1,6 @@
 # Azure Playpen
 
-This repo contains example code and notes for using Microsoft Azure.
+Example code and notes for using Microsoft Azure.
 
 ## AZ-900 - Azure Fundamentals
 
