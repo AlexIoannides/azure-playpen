@@ -1,4 +1,4 @@
-# Azure Function for Serverless Compute
+# Azure Function Apps for Serverless Compute
 
 This guide loosely follows the [Microsoft Learn Quickstart Guide](https://learn.microsoft.com/en-us/azure/azure-functions/create-first-function-cli-python?tabs=macos%2Cbash%2Cazure-cli%2Cbrowser) for deploying a Python function that handles HTTP requests.
 
